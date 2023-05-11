@@ -1,0 +1,999 @@
+{
+	"info": {
+		"_postman_id": "863293ce-b45d-45dd-8d62-d58a47ea0309",
+		"name": "Github Repo Api Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25663283"
+	},
+	"item": [
+		{
+			"name": "Create a repo for Authenticated user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const res = pm.response.json().owner.login;\r",
+							"pm.environment.set(\"owner\", res);\r",
+							"\r",
+							"const result = pm.response.json().name;\r",
+							"pm.environment.set(\"repo\", result);\r",
+							"console.log(res,result)\r",
+							"\r",
+							"pm.test(\"Status for create a repo for authenticated user\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n                \"name\": \"Disco Ninjass\",\r\n                \"description\": \"This is the first project of mine on api testing\",\r\n                \"homepage\": \"https://github.com\",\r\n                \"private\" : false,\r\n                \"has_downloads\":true,\r\n                \"auto_init\":true,\r\n                \"is_template\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/repos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update the Repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for update the repo\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"description\": \"This is updated\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get the Repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for getting the repo\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create And update file content",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for create or update file content\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"const res = pm.response.json().content.sha;\r",
+							"pm.environment.set(\"sha\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"message\": \"my commit message\",\r\n    \"committer\": {\r\n    \"name\": \"Manisha\",\r\n    \"email\": \"wadhemanisha@gmail.com\"\r\n  },\r\n   \"content\": \"bXkgbmV3IGZpbGUgY29udGVudHM=\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/contents/github project",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"contents",
+						"github project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create the fork",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for creating the fork\", function () {\r",
+							"    pm.response.to.have.status(202);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{      \r\n//   \"organization\": \"octocat\",\r\n  \"name\": \"Hello-World\",\r\n  \"default_branch_only\": true\r\n\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/forks",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"forks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List of fork",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for lish of fork\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/forks",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"forks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List repo for a user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code list repo for a user\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/users/{{owner}}/repos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{owner}}",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Repo languages",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code For list repo languages\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/languages",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"languages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List public repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for list public repo\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repositories",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repositories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List of repo tags",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for list of repo tags\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/tags",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"tags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an autolink refereence for a repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const res = pm.response.json().id\r",
+							"pm.environment.set(\"autolink_id\", res);\r",
+							"\r",
+							"pm.test(\"Status code create an autolink reference for repo\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"key_prefix\": \"TICKET-\",\r\n    \"url_template\": \"https://example.com/TICKET?query=<num>\",\r\n    \"is_alphanumeric\": true\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/autolinks",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"autolinks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an autolink reference of a repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for get an autolink refereance of a repo\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/autolinks/{{autolink_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"autolinks",
+						"{{autolink_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Replace repo all topics",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for replace repo all topics\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"names\": [\r\n    \"octocat\",\r\n    \"atom\",\r\n    \"electron\",\r\n    \"api\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/topics",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"topics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All repo topics",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for get all repo topics\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/topics",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"topics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a autolink reference of a repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for deleting the autolink reference of a repo\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/autolinks/{{autolink_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"autolinks",
+						"{{autolink_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a file",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for deleting the file\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"message\": \"my commit message\",\r\n      \"committer\": {\r\n      \"name\": \"Manisha\",\r\n      \"email\": \"wadhemanisha@gmail.com\"\r\n  },\r\n      \"sha\": \"{{sha}}\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}/contents/github project",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}",
+						"contents",
+						"github project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code for deleting the repo\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/repos/{{owner}}/{{repo}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repo}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
